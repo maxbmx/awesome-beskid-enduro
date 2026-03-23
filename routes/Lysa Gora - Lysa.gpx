@@ -1,0 +1,159 @@
+
+<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1" creator="Ageno" xsi:schemaLocation="http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd">
+    <metadata>
+        <name>Lysa Gora - Lysa</name>
+        <time>2026-03-23T19:46:34.645Z</time>
+    </metadata>
+    <trk>
+        <name>Lysa Gora - Lysa</name>
+        <type>Jazda rowerem górskim MTB</type>
+        <extensions>
+            <gpxx:TrackExtension>
+                <gpxx:DisplayColor>Blue</gpxx:DisplayColor>
+            </gpxx:TrackExtension>
+        </extensions>
+        <trkseg>
+            <trkpt lon="19.092327" lat="49.787612">
+                <ele>652.000000</ele>
+            </trkpt>
+            <trkpt lon="19.092410" lat="49.787743">
+                <ele>649.500000</ele>
+            </trkpt>
+            <trkpt lon="19.092271" lat="49.787784">
+                <ele>647.000000</ele>
+            </trkpt>
+            <trkpt lon="19.091955" lat="49.787787">
+                <ele>643.200000</ele>
+            </trkpt>
+            <trkpt lon="19.091794" lat="49.787824">
+                <ele>641.300000</ele>
+            </trkpt>
+            <trkpt lon="19.091783" lat="49.787857">
+                <ele>640.600000</ele>
+            </trkpt>
+            <trkpt lon="19.091806" lat="49.787910">
+                <ele>639.400000</ele>
+            </trkpt>
+            <trkpt lon="19.092075" lat="49.788079">
+                <ele>634.900000</ele>
+            </trkpt>
+            <trkpt lon="19.092087" lat="49.788105">
+                <ele>634.300000</ele>
+            </trkpt>
+            <trkpt lon="19.091905" lat="49.788166">
+                <ele>631.200000</ele>
+            </trkpt>
+            <trkpt lon="19.091246" lat="49.788152">
+                <ele>622.200000</ele>
+            </trkpt>
+            <trkpt lon="19.091156" lat="49.788217">
+                <ele>619.400000</ele>
+            </trkpt>
+            <trkpt lon="19.090718" lat="49.788182">
+                <ele>612.500000</ele>
+            </trkpt>
+            <trkpt lon="19.090575" lat="49.788238">
+                <ele>609.200000</ele>
+            </trkpt>
+            <trkpt lon="19.090405" lat="49.788627">
+                <ele>596.000000</ele>
+            </trkpt>
+            <trkpt lon="19.090497" lat="49.788703">
+                <ele>592.500000</ele>
+            </trkpt>
+            <trkpt lon="19.090426" lat="49.788732">
+                <ele>590.700000</ele>
+            </trkpt>
+            <trkpt lon="19.090352" lat="49.788739">
+                <ele>589.200000</ele>
+            </trkpt>
+            <trkpt lon="19.090101" lat="49.788655">
+                <ele>583.400000</ele>
+            </trkpt>
+            <trkpt lon="19.090060" lat="49.788681">
+                <ele>582.200000</ele>
+            </trkpt>
+            <trkpt lon="19.089952" lat="49.788797">
+                <ele>577.600000</ele>
+            </trkpt>
+            <trkpt lon="19.089674" lat="49.788900">
+                <ele>569.800000</ele>
+            </trkpt>
+            <trkpt lon="19.089646" lat="49.788941">
+                <ele>568.100000</ele>
+            </trkpt>
+            <trkpt lon="19.089649" lat="49.789055">
+                <ele>564.300000</ele>
+            </trkpt>
+            <trkpt lon="19.089539" lat="49.789161">
+                <ele>560.600000</ele>
+            </trkpt>
+            <trkpt lon="19.089371" lat="49.789191">
+                <ele>557.000000</ele>
+            </trkpt>
+            <trkpt lon="19.089289" lat="49.789224">
+                <ele>554.800000</ele>
+            </trkpt>
+            <trkpt lon="19.089254" lat="49.789265">
+                <ele>553.200000</ele>
+            </trkpt>
+            <trkpt lon="19.089214" lat="49.789370">
+                <ele>549.400000</ele>
+            </trkpt>
+            <trkpt lon="19.088967" lat="49.789439">
+                <ele>543.300000</ele>
+            </trkpt>
+            <trkpt lon="19.088899" lat="49.789501">
+                <ele>540.900000</ele>
+            </trkpt>
+            <trkpt lon="19.088858" lat="49.789595">
+                <ele>537.900000</ele>
+            </trkpt>
+            <trkpt lon="19.088758" lat="49.789658">
+                <ele>534.700000</ele>
+            </trkpt>
+            <trkpt lon="19.088557" lat="49.789651">
+                <ele>530.100000</ele>
+            </trkpt>
+            <trkpt lon="19.088267" lat="49.789859">
+                <ele>522.200000</ele>
+            </trkpt>
+            <trkpt lon="19.087899" lat="49.790014">
+                <ele>515.600000</ele>
+            </trkpt>
+            <trkpt lon="19.087531" lat="49.790018">
+                <ele>508.200000</ele>
+            </trkpt>
+            <trkpt lon="19.086993" lat="49.790317">
+                <ele>494.600000</ele>
+            </trkpt>
+            <trkpt lon="19.086922" lat="49.790466">
+                <ele>490.800000</ele>
+            </trkpt>
+            <trkpt lon="19.086896" lat="49.790579">
+                <ele>487.900000</ele>
+            </trkpt>
+            <trkpt lon="19.086895" lat="49.790632">
+                <ele>486.500000</ele>
+            </trkpt>
+            <trkpt lon="19.086675" lat="49.790870">
+                <ele>478.700000</ele>
+            </trkpt>
+            <trkpt lon="19.086675" lat="49.790870">
+                <ele>478.700000</ele>
+            </trkpt>
+            <trkpt lon="19.086686" lat="49.790878">
+                <ele>478.400000</ele>
+            </trkpt>
+            <trkpt lon="19.086693" lat="49.790891">
+                <ele>478.100000</ele>
+            </trkpt>
+            <trkpt lon="19.086683" lat="49.790918">
+                <ele>477.500000</ele>
+            </trkpt>
+            <trkpt lon="19.086596" lat="49.790946">
+                <ele>475.900000</ele>
+            </trkpt>
+        </trkseg>
+    </trk>
+</gpx>
