@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="pl" class="auth-pending">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -33,10 +33,21 @@
     };
   </script>
   <style>
+    html.auth-pending body { visibility: hidden; }
     .leaflet-container { font-family: inherit; background: #e8eef2; }
   </style>
 </head>
 <body class="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased">
+  <script>
+    const pass = prompt("Podaj tajne hasło!");
+    if (pass !== "maxbmx") {
+      document.body.innerHTML = "";
+      document.documentElement.classList.remove("auth-pending");
+      window.stop();
+    } else {
+      document.documentElement.classList.remove("auth-pending");
+    }
+  </script>
   <header class="border-b border-slate-200/80 bg-white/90 backdrop-blur-sm">
     <div class="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-6 sm:flex-row sm:items-end sm:justify-between">
       <div>
