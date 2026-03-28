@@ -35,6 +35,7 @@
   <style>
     html.auth-pending body { visibility: hidden; }
     .leaflet-container { font-family: inherit; background: #e8eef2; }
+    #route-search::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
   </style>
 </head>
 <body class="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased">
@@ -49,18 +50,62 @@
     }
   </script>
   <header class="border-b border-slate-200/80 bg-white/90 backdrop-blur-sm">
-    <div class="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-6 sm:flex-row sm:items-end sm:justify-between">
-      <div>
-        <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Awesome Beskid Enduro</h1>
-        <p class="mt-1 text-sm text-slate-500">Podgląd tras GPX na mapie (OpenStreetMap / OpenTopoMap)</p>
+    <div class="mx-auto max-w-7xl px-4 py-6">
+      <div class="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 class="text-2xl font-semibold tracking-tight text-slate-900">Awesome Beskid Enduro</h1>
+          <p class="mt-1 text-sm text-slate-500">Podgląd tras GPX na mapie (OpenStreetMap / OpenTopoMap)</p>
+        </div>
+        <p id="route-count" class="text-sm text-slate-400"></p>
       </div>
-      <p id="route-count" class="text-sm text-slate-400"></p>
+      <div
+        id="route-toolbar"
+        class="mt-6 rounded-xl border border-slate-200/90 bg-white px-4 py-4 shadow-card sm:px-5"
+        role="search"
+        aria-label="Wyszukiwanie i filtr tras"
+      >
+        <div class="flex flex-col gap-5 lg:flex-row lg:items-end lg:gap-8">
+          <div class="min-w-0 flex-1">
+            <label for="route-search" class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Szukaj tras</label>
+            <div class="relative">
+              <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              </span>
+              <input
+                id="route-search"
+                type="search"
+                class="w-full rounded-xl border border-slate-200 bg-slate-50/80 py-2.5 pl-10 pr-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-accent focus:bg-white focus:outline-none focus:ring-2 focus:ring-accent/25"
+                placeholder="Nazwa trasy, plik…"
+                autocomplete="off"
+                enterkeyhint="search"
+              />
+            </div>
+          </div>
+          <div class="min-w-0 flex-1 lg:max-w-[58%] xl:max-w-[62%]">
+            <span class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Rejon / góra</span>
+            <div
+              id="region-filters"
+              class="flex flex-wrap gap-2"
+              role="group"
+              aria-label="Filtr po rejonie"
+            ></div>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
 
   <main class="mx-auto max-w-7xl px-4 py-8">
     <div id="error-banner" class="mb-6 hidden rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"></div>
-    <div id="grid" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"></div>
+    <div id="grid" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div
+        id="routes-empty"
+        class="hidden col-span-full rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-14 text-center text-sm text-slate-500 shadow-card"
+        role="status"
+      >
+        Brak tras spełniających kryteria. Zmień wyszukiwanie lub wybierz inny rejon.
+      </div>
+    </div>
   </main>
 
   <footer class="mx-auto max-w-7xl px-4 pb-10 pt-2 text-center text-xs text-slate-400">
@@ -568,6 +613,9 @@
   <script>
 (function () {
   var STORAGE_KEY = 'beskid-enduro-favorite-routes';
+  var allEntries = [];
+  var cardByFile = new Map();
+  var filterState = { query: '', region: '' };
 
   function getFavorites() {
     try {
@@ -607,6 +655,100 @@
       return entry.file.replace(/\.gpx$/i, '');
     }
     return n;
+  }
+
+  /** Pierwszy segment tytułu (np. „Gaiki”, „Cyberniok”) — jak sekcje tras na beskider.pl */
+  function routeRegion(entry) {
+    var t = displayTitle(entry);
+    var norm = t.replace(/\s*[–—]\s*/g, ' - ');
+    var i = norm.indexOf(' - ');
+    if (i > 0) return norm.slice(0, i).trim();
+    var s = norm.trim();
+    return s || 'Inne';
+  }
+
+  function regionChipClass(active) {
+    var base =
+      'inline-flex shrink-0 items-center rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/35';
+    return (
+      base +
+      (active
+        ? ' border-accent bg-orange-50 text-slate-900 shadow-sm'
+        : ' border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300 hover:bg-slate-100 hover:text-slate-900')
+    );
+  }
+
+  function syncRegionButtons(container) {
+    if (!container) return;
+    container.querySelectorAll('button[data-region]').forEach(function (btn) {
+      var val = btn.getAttribute('data-region') || '';
+      var on = val === filterState.region;
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      btn.className = regionChipClass(on);
+    });
+  }
+
+  function buildRegionFilters(entries, container) {
+    if (!container) return;
+    var seen = {};
+    entries.forEach(function (e) {
+      seen[routeRegion(e)] = true;
+    });
+    var regions = Object.keys(seen).sort(function (a, b) {
+      return a.localeCompare(b, 'pl');
+    });
+    container.innerHTML = '';
+    function addBtn(label, value) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.setAttribute('data-region', value);
+      btn.textContent = label;
+      btn.addEventListener('click', function () {
+        filterState.region = value;
+        syncRegionButtons(container);
+        applyRouteFilters();
+      });
+      container.appendChild(btn);
+    }
+    addBtn('Wszystko', '');
+    regions.forEach(function (r) {
+      addBtn(r, r);
+    });
+    syncRegionButtons(container);
+  }
+
+  function entryMatchesFilter(entry) {
+    if (filterState.region && routeRegion(entry) !== filterState.region) return false;
+    var q = filterState.query.trim().toLowerCase();
+    if (!q) return true;
+    var title = displayTitle(entry).toLowerCase();
+    var file = (entry.file || '').toLowerCase();
+    return title.indexOf(q) !== -1 || file.indexOf(q) !== -1;
+  }
+
+  function updateRouteCountDisplay(visible) {
+    var el = document.getElementById('route-count');
+    if (!el) return;
+    var total = allEntries.length;
+    if (visible === total) {
+      el.textContent = total + (total === 1 ? ' trasa' : ' tras');
+    } else {
+      el.textContent = visible + ' z ' + total + ' tras';
+    }
+  }
+
+  function applyRouteFilters() {
+    var visible = 0;
+    allEntries.forEach(function (entry) {
+      var card = cardByFile.get(entry.file);
+      if (!card) return;
+      var ok = entryMatchesFilter(entry);
+      card.classList.toggle('hidden', !ok);
+      if (ok) visible++;
+    });
+    var emptyEl = document.getElementById('routes-empty');
+    if (emptyEl) emptyEl.classList.toggle('hidden', visible !== 0);
+    updateRouteCountDisplay(visible);
   }
 
   function formatDate(iso) {
@@ -712,6 +854,7 @@
     var wrap = document.createElement('article');
     wrap.className = 'route-card flex flex-col overflow-hidden rounded-xl border border-slate-100 bg-white shadow-card';
     wrap.dataset.file = entry.file;
+    wrap.dataset.region = routeRegion(entry);
     wrap.innerHTML =
       '<div class="map-host relative h-52 w-full bg-slate-100">' +
         '<div class="map-skeleton absolute inset-0 animate-pulse bg-gradient-to-br from-slate-100 to-slate-200"></div>' +
@@ -897,12 +1040,31 @@
 
   loadRoutesManifest()
     .then(function (entries) {
+      allEntries = entries;
+      cardByFile.clear();
       var grid = document.getElementById('grid');
-      var countEl = document.getElementById('route-count');
-      if (countEl) countEl.textContent = entries.length + (entries.length === 1 ? ' trasa' : ' tras');
-      entries.forEach(function (entry) {
-        grid.appendChild(renderCard(entry));
+      grid.querySelectorAll('.route-card').forEach(function (n) {
+        n.remove();
       });
+      entries.forEach(function (entry) {
+        var card = renderCard(entry);
+        cardByFile.set(entry.file, card);
+        grid.appendChild(card);
+      });
+      var regionBox = document.getElementById('region-filters');
+      buildRegionFilters(entries, regionBox);
+      var searchEl = document.getElementById('route-search');
+      if (searchEl) {
+        searchEl.value = '';
+        filterState.query = '';
+        filterState.region = '';
+        searchEl.addEventListener('input', function (e) {
+          filterState.query = e.target.value;
+          applyRouteFilters();
+        });
+      }
+      syncRegionButtons(regionBox);
+      applyRouteFilters();
       observeCards(entries);
     })
     .catch(function (err) {
